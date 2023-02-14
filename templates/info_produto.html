@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block conteudo %}
+
+<main class="container">
+
+    <div class="py-5 text-center">
+        <h2>Informações de Produto</h2>
+        <p class="lead">Verfique abaixo as informações de {{ produto.nome.upper() }}.</p>
+    </div>
+
+    <div class="row g-5">
+        <div class="col-12">
+            <table class="table" action="/info_produto/{{ produto.id }}" method="POST"> <!-- Caminho para procura (com ID) -->
+                <!-- Tabela com dados do produto -->
+                <h4 class="mb-3">Dados do Produto</h4>
+                <thead class="col-12">
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Preço</th>
+                    <th>Descrição</th>
+                </thead>
+
+                <tbody class="col-12">
+                    <tr>
+                        <td>{{ produto.id }}</td>
+                        <td>{{ produto.nome }}</td>
+                        <td>R$ {{ '%0.2f'|format(produto.valor|float) }}</td>
+                        <td>{{ produto.descricao }}</td>
+                        <td>
+                            <a href="/editar_produto/{{produto.id}}"><button type="button" class="btn btn-outline-primary">Editar</button></a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table> 
+        </div>
+    </div>
+
+    <div class="mb-4"> </div> <!-- Espaçamento -->
+
+    <!-- Botões da parte de baixo -->
+    <div class="row g-3">
+        <div class="col-md-12 col-lg-6 p-2">
+            <button class="w-100 btn btn-outline-secondary btn-lg" type="submit" name="return" onclick="history.back()">
+                Voltar para anterior
+            </button>
+        </div>
+        <div class="col-md-12 col-lg-6 p-2">
+            <a href="/cadastrar_produto">
+                <button class="w-100 btn btn-outline-success btn-lg" type="submit">
+                    Cadastrar novo produto
+                </button>
+            </a>
+        </div>
+    </div>
+
+</main>
+
+{% endblock %}

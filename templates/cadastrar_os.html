@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block conteudo %}
+
+<!-- Cadastro de serviços -->
+
+<main class="container">
+    <div class="py-5 text-center">
+        <h2>Abertura de Ordem de Serviço</h2>
+        <p class="lead">Insira abaixo as informações para cadastro.</p>
+    </div>
+
+    <div class="row g-5">
+        <div class="col-md-12 col-lg-12">
+            <form action="/cadastrar_os" method="POST">
+                <h4 class="mb-3">Informações para abertura da O.S.</h4>
+                <div class="row g-3">
+                    <!-- Preenchimento dos campos para serviço -->
+                    <div class="col-sm-12 col-md-6">
+                        <label for="orcamento" class="form-label">Referente ao Orçamento nº: <span style="color:red">&nbsp;*</span></label>
+                        <input type="number" class="form-control" id="orcamento" name="orcamento" placeholder="Orçamento nº" required>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6">
+                        <label for="funcionario" class="form-label">Funcionario: <span style="color:red">&nbsp;*</span></label>
+                        <select class="form-select" id="funcionario" name="funcionario">
+                            <option selected>Escolha o funcionário...</option>
+                            {% for func in funcionario %}
+                                <option value="{{func.id}}">{{ func.nome }} ({{ func.funcao }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="col-sm-12 col-md-12">
+                        <label for="descricao" class="form-label">Observação: <span style="color:red">&nbsp;*</span></label>
+                        <textarea type="text" class="form-control" id="descricao" name="descricao" placeholder="Descrição"></textarea>
+                    </div>
+
+                </div>
+
+                <div class="mb-5"> </div> <!-- Espaçamento -->
+
+                <!-- Mensagens de validação -->
+                <div class="col-12 text-center">
+                    {% if mensagem_ok %}
+                    <div class="alert alert-success" role="alert">
+                        {{ mensagem_ok }}
+                    </div>
+                    {% elif mensagem_erro %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ mensagem_erro }}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-md-12 col-lg-6 p-2">
+                        <a class="w-100 btn btn-outline-secondary btn-lg" href="javascript:history.back()">Voltar para anterior</a>
+                    </div>
+                    <div class="col-md-12 col-lg-6 p-2">
+                        <button class="w-100 btn btn-success btn-lg" type="submit">Cadastrar Ordem de Serviço</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+
+{% endblock %}

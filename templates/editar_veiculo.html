@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block conteudo %}
+
+<main class="container">
+    <div class="py-5 text-center">
+        <h2>Editar Informação de Veículos</h2>
+        <p class="lead">Insira abaixo as novas informações para atualização.</p>
+    </div>
+
+    <div class="row g-5">
+        <div class="col-12">
+            <form action="/editar_veiculo/{{veiculo.id}}" method="POST">
+
+                <h4 class="mb-3">Informações do Veículo</h4>
+                <div class="row g-3">
+                    <div class="col-sm-12 col-md-6">
+                        <label for="marca" class="form-label">Marca<span style="color:red">&nbsp;*</span></label>
+                        <input type="text" class="form-control" id="marca" name="marca" placeholder="Marca" value="{{ veiculo.marca }}">
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <label for="modelo" class="form-label">Modelo<span style="color:red">&nbsp;*</span></label>
+                        <input type="text" class="form-control" id="modelo" name="modelo" placeholder="Modelo" value="{{ veiculo.modelo }}">
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <label for="cor" class="form-label">Cor Predominante<span
+                                style="color:red">&nbsp;*</span></label>
+                        <input type="text" class="form-control" id="cor" name="cor" placeholder="Cor Predominante" value="{{ veiculo.cor }}">
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <label for="placa" class="form-label">Placa<span style="color:red">&nbsp;*</span></label>
+                        <input type="text" class="form-control" id="placa" name="placa" placeholder="Placa" value="{{ veiculo.placa }}">
+                    </div>
+                </div>
+
+                <div class="mb-5"> </div> <!-- Espaçamento -->
+                <hr class="my-4"> <!-- Linha de separação -->
+            
+                <div class="row g-3">
+                    <div class="col-md-12 col-lg-6 p-2">
+                        <a class="w-100 btn btn-outline-secondary btn-lg" href="javascript:history.back()">Voltar para anterior</a>
+                    </div>
+                    <div class="col-md-12 col-lg-6 p-2">
+                        <button type="button" class="w-100 btn btn-success btn-lg" data-bs-toggle="modal" data-bs-target="#exampleModal{{veiculo.id}}">
+                            Alterar informações
+                        </button>
+                        
+                        <div class="modal fade" id="exampleModal{{veiculo.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">Alterar dados?</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    Tem certeza que deseja alterar os dados do veículo de placa {{ veiculo.placa }}?
+                                </div>
+                                <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Não</button>
+                                <button type="submit" class="btn btn-success">Sim</button></a>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> 
+        </form>
+        </div>
+    </div>   
+</main>
+
+{% endblock %}

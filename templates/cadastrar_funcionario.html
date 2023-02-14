@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block conteudo %}
+
+<!-- Cadastro de clientes -->
+
+<main class="container">
+    <div class="py-5 text-center">
+        <h2>Cadastro de Funcionários</h2>
+        <p class="lead">Insira abaixo as informações do funcionário para cadastro.</p>
+    </div>
+
+    <div class="row g-5">
+        <div class="col-md-12 col-lg-12">
+            <form action="/cadastrar_funcionario" method="POST">
+                <h4 class="mb-3">Informações do Funcionário</h4>
+                <div class="row g-3">
+                    <!-- Preenchimento dos campos para usuário -->
+                    <div class="col-sm-12 col-md-6">
+                        <label for="nome" class="form-label">Nome Completo<span style="color:red">&nbsp;*</span></label>
+                        <input type="text" class="form-control" id="nome" name="nome" placeholder="Nome Completo" required>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6">
+                        <label for="email" class="form-label">E-mail<span style="color:red">&nbsp;*</span></label>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="email@exemplo.com" required>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6">
+                        <label for="telefone" class="form-label">Telefone<span class="text-muted">&nbsp;(Opcional)</span></label>
+                        <input type="number" class="form-control" id="telefone" name="telefone" placeholder="Somente números">
+                    </div>
+
+                    <div class="col-sm-12 col-md-6">
+                        <label for="celular" class="form-label">Celular<span style="color:red">&nbsp;*</span></label>
+                        <input type="number" class="form-control" id="celular" name="celular" placeholder="Somente números" required>
+                    </div>
+
+                    <div class="col-sm-12 col-md-4">
+                        <label for="dataAniversario" class="form-label">Data do Aniversário<span style="color:red">&nbsp;*</span></label>
+                        <input type="date" class="form-control" id="dataAniversario" name="dataAniversario" placeholder="" required>
+                    </div>
+
+                    <div class="col-sm-12 col-md-4">
+                        <label for="dataContrato" class="form-label">Data de Contratação<span style="color:red">&nbsp;*</span></label>
+                        <input type="date" class="form-control" id="dataContrato" name="dataContrato" placeholder="" required>
+                    </div>
+
+                    <div class="col-sm-12 col-md-4">
+                        <label for="funcao" class="form-label">Função<span style="color:red">&nbsp;*</span></label>
+                        <input type="text" class="form-control" id="funcao" name="funcao" placeholder="Função" required>
+                    </div>
+
+                </div>
+
+                <div class="mb-5"> </div> <!-- Espaçamento -->
+
+                <!-- Mensagens de validação -->
+                <div class="col-12 text-center">
+                    {% if mensagem_ok %}
+                    <div class="alert alert-success" role="alert">
+                        {{ mensagem_ok }}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-md-12 col-lg-6 p-2">
+                        <a class="w-100 btn btn-outline-secondary btn-lg" href="javascript:history.back()">Voltar para anterior</a>
+                    </div>
+                    <div class="col-md-12 col-lg-6 p-2">
+                        <button class="w-100 btn btn-success btn-lg" type="submit">Cadastrar Funcionário</button>
+                    </div>
+                </div> 
+
+            </form>
+        </div>
+    </div>
+</main>
+
+{% endblock %}

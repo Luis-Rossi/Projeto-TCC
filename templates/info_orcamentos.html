@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% block conteudo %}
+
+<main class="container">
+
+    <div class="py-5 text-center">
+        <h2>Orçamento nº {{ orcamento.id }}</h2>
+        <p class="lead">Confira abaixo as informações o orçamento.</p>
+    </div>
+
+    <div class="row g-5">
+       
+        <div class="col-12">
+
+            <div class="col-12 d-flex">
+
+                <div class="col-4 mt-3">
+                    <h4 class="mb-3">Dados do Orçamento</h4>
+                    <p><strong>Sofisticar Estética Automotiva</strong></p>
+                    <p><strong>Orçamento nº: </strong>{{orcamento.id}}</p>
+                    <p><strong>Emitido em: </strong>{{orcamento.data.day}}/{{orcamento.data.month}}/{{orcamento.data.year}}</p>
+                    <p>
+                        <strong>Status: </strong>
+                        {% set ultimo_status = [] %}
+                        {% set ultimo_status = orcamento.status.keys() | list %}
+
+                        {% if ultimo_status[-1] == '1' or ultimo_status[-1] == '4'%}
+                        <td><button type="button" class="btn btn-secondary btn-sm" disabled>{{ orcamento.retorna_status_orc(ultimo_status[-1]) }}</button></td>
+                        {% elif ultimo_status[-1] == '3'%}
+                        <td><button type="button" class="btn btn-danger btn-sm" disabled>{{ orcamento.retorna_status_orc(ultimo_status[-1]) }}</td>
+                        {% elif ultimo_status[-1] == '2' or ultimo_status[-1] == '5'%}
+                        <td><button type="button" class="btn btn-success btn-sm" disabled>{{ orcamento.retorna_status_orc(ultimo_status[-1]) }}</td>
+                        {% endif %}
+                    </p>
+
+                </div>
+
+                <div class="col-4 mt-3">
+                    <h4 class="mb-3">Dados do Cliente</h4>
+                    <p><strong>Nome: </strong>{{cliente.nome}}</p>
+                    <p><strong>E-mail: </strong>{{cliente.email}}</p>
+                    <p><strong>Telefone: </strong>({{cliente.telefone[0:2]}}){{cliente.telefone[2:6]}}-{{cliente.telefone[6:11]}}</p>
+                    <p><strong>Celular: </strong>({{cliente.celular[0:2]}}){{cliente.celular[2]}}.{{cliente.celular[3:7]}}-{{cliente.celular[7:12]}}</p>
+                </div>
+
+                <div class="col-4 mt-3">
+                    <h4 class="mb-3">Dados do Veículo</h4>
+                    <p><strong>Marca: </strong>{{veiculo.marca}}</p>
+                    <p><strong>Modelo: </strong>{{veiculo.modelo}}</p>
+                    <p><strong>Cor: </strong>{{veiculo.cor}}</p>
+                    <p><strong>Placa: </strong>{{veiculo.placa}}</p>
+                </div>
+
+            </div>
+
+            {% if orcamento.servico_id != {} %}
+                <table class="table">
+                    <h4 class="mb-1 mt-2">Itens</h4>
+
+                    <thead class="col-12">
+                        <th>Tipo</th>
+                        <th>Nome</th>
+                        <th>Descrição</th>
+                        <th>Valor</th>
+                    </thead>
+                
+                    <tbody class="col-12">
+                        {% for serv in servico %}
+                        <tr>
+                            {% for item in orcamento.servico_id %}
+                                {% for elemento in orcamento.servico_id[item] %}
+                                        {% if elemento | float == serv.id | float %}
+                                            <td>Serviço</td>
+                                            <td>{{ serv.nome }}</td>
+                                            <td>{{ serv.descricao }}</td>
+                                            <td>R$ {{ '%0.2f'|format(serv.valor|float) }}</td>
+                                        {% endif %}
+                                {% endfor %}
+                            {% endfor %}
+                        </tr> 
+                        {% endfor %}
+                        
+                        {% for prod in produto %}
+                        <tr>
+                            {% for item in orcamento.produto_id %}
+                                {% for elemento in orcamento.produto_id[item] %}
+                                        {% if elemento | float == prod.id | float %}
+                                            <td>Produto</td>
+                                            <td>{{ prod.nome }}</td>
+                                            <td>{{ prod.descricao }}</td>
+                                            <td>R$ {{ '%0.2f'|format(prod.valor|float) }}</td>
+                                        {% endif %}
+                                {% endfor %}
+                            {% endfor %}
+                        </tr> 
+                        {% endfor %}  
+                    </tbody>
+                </table>
+            {% else %}
+            {% endif %}
+
+            <div class="mb-5"> </div> <!-- Espaçamento -->
+
+
+
+            <div class="mb-5"> </div> <!-- Espaçamento -->
+            
+            <dic class="col-12">
+                <h4 class="text-white text-end bg-dark mt-0 pt-3 pb-3 pe-5">VALOR TOTAL: R$ {{ '%0.2f'|format(valor_total|float) }}</h4>
+            </div>
+
+
+            <!-- Botões da parte de baixo -->
+            <div class="row g-3">
+                <div class="col-md-12 col-lg-6 p-2">
+                    <button class="w-100 btn btn-outline-secondary btn-lg" type="submit" name="return" onclick="history.back()">
+                        Voltar para anterior
+                    </button>
+                </div>
+                <div class="col-md-12 col-lg-6 p-2">
+                    <a href="/cadastrar_orcamento">
+                        <button class="w-100 btn btn-outline-success btn-lg" type="submit">
+                            Cadastrar novo produto
+                        </button>
+                    </a>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+</main>
+
+{% endblock %}

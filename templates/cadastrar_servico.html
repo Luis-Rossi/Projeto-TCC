@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block conteudo %}
+
+<main class="container">
+    <div class="py-5 text-center">
+        <h2>Cadastro de Serviços</h2>
+        <p class="lead">Insira abaixo as informações do serviço para cadastro.</p>
+    </div>
+
+    <div class="row g-5">
+        <div class="col-md-12 col-lg-12">
+            <form action="/cadastrar_servico" method="POST">
+                <h4 class="mb-3">Informações do Serviço</h4>
+                <div class="row g-3">
+
+                    <div class="col-sm-12 col-md-6">
+                        <label for="nome" class="form-label">Nome<span style="color:red">&nbsp;*</span></label>
+                        <input type="text" class="form-control" id="nome" name="nome" placeholder="Nome" required>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6">
+                        <label for="preco" class="form-label">Preço<span style="color:red">&nbsp;*</span></label>
+                        <input type="float" class="form-control" id="valor" name="valor" placeholder="Preço" required>
+                    </div>
+
+                    <div class="col-sm-12 col-md-12">
+                        <label for="descricao" class="form-label">Descrição<span style="color:red">&nbsp;*</span></label>
+                        <textarea type="text" class="form-control" id="descricao" name="descricao" placeholder="Descrição" required></textarea>
+                    </div>
+
+                </div>
+
+                <div class="mb-5"> </div> <!-- Espaçamento -->
+
+                <!-- Mensagens de validação -->
+                <div class="col-12 text-center">
+                    {% if mensagem_ok %}
+                    <div class="alert alert-success" role="alert">
+                        {{ mensagem_ok }}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-md-12 col-lg-6 p-2">
+                        <a class="w-100 btn btn-outline-secondary btn-lg" href="javascript:history.back()">Voltar para anterior</a>
+                    </div>
+                    <div class="col-md-12 col-lg-6 p-2">
+                        <button class="w-100 btn btn-success btn-lg" type="submit">Cadastrar Serviço</button>
+                    </div>
+                </div> 
+
+            </form>
+        </div>
+    </div>
+</main>
+
+{% endblock %}

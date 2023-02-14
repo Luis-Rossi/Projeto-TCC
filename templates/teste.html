@@ -1,0 +1,19 @@
+<form action="/resultado_clientes" class="col-12 d-flex" method="POST">
+  <div class="col-3 p-1">
+      <select class="form-select" name="opcao_cliente">
+          <option>-- Selecione --</option>
+          <option name="nome">Nome</option>
+          <option name="email">E-mail</option>
+          <option name="telefone">Telefone</option>
+          <option name="celular">Celular</option>
+          <option>------------------</option>
+          <option name="">Placa do Veículo</option>
+      </select>
+  </div>
+  <div class="col-9 p-1">
+      <div class="input-group">
+          <input type="text" class="form-control" placeholder="Insira uma informação ou deixe em branco para todos os registros" name="campo_cliente">
+          <button type="submit" class="btn btn-secondary">Pesquisar!</button>
+      </div>
+  </div>
+</form>

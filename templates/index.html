@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block conteudo %}
+
+<!-- Sugestão de página inicial com informações para gestão -->
+<!-- Essa parte ainda não foi definida como versão final -->
+
+<main class="container">
+    <div class="row g-5">
+        <div class="col-md-12 col-lg-12">
+            <div class="mb-5"> </div>
+
+            <h4 class="mb-4">Agendamentos do dia - {{data_tratada.day}}/{{data_tratada.month}}/{{data_tratada.year}}</h4>
+
+            <table class="table">
+                <thead>
+                    <th>Número</th>
+                    <th>Data</th>
+                    <th>Hora</th>
+                    <th>Nome Cliente</th>
+                    <th>Placa Veículo</th>
+                    <th>Ações</th>
+                </thead>
+                <tbody>
+                    {% for ag in agendamento %}
+                        {% if data_tratada.date() == ag.data_agendamento.date() %}
+                        <tr>
+                            {% for carro in veiculo %}
+                                {% if carro.id == ag.veiculo_id %}
+                                
+                                    <td>{{ ag.id }}</td>
+
+                                    <td>{{ ag.data_agendamento.date().day }}/{{ ag.data_agendamento.date().month }}/{{ ag.data_agendamento.date().year }}</td>
+
+                                    {% if ag.data_agendamento.time().minute == 0 %}
+                                    <td>{{ ag.data_agendamento.time().hour }}h00</td>
+                                    {% else %}
+                                    <td>{{ ag.data_agendamento.time().hour }}h{{ ag.data_agendamento.time().minute }}</td>
+                                    {% endif %}
+                                                                   
+                                    {% for cli in cliente %} 
+                                        {% if cli.id == carro.cliente_id %}
+                                            <td>{{ cli.nome }}</td>
+                                        {% endif %}
+                                    {% endfor %}
+    
+                                    <td>{{ carro.placa }}</td>
+
+                                    <td>
+                                        <a href="/info_agendamento/{{ag.id}}"><button type="button" class="btn btn-outline-success" >Info</button></a>
+                                    </td>
+ 
+                                {% endif %}
+                            {% endfor %} 
+                        </tr>
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+
+</main>
+
+{% endblock %}

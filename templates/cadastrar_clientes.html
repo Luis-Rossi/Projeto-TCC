@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block conteudo %}
+
+<main class="container">
+    <div class="py-5 text-center">
+        <h2>Cadastro de Clientes</h2>
+        <p class="lead">Insira abaixo as informações do cliente para cadastro.</p>
+    </div>
+
+    <div class="row g-5">
+        <div class="col-md-12 col-lg-12">
+            <form action="/cadastrar_clientes" method="POST">
+                <h4 class="mb-3">Informações do Cliente</h4>
+                <div class="row g-3">
+                    <!-- Preenchimento dos campos para usuário -->
+                    <div class="col-sm-12 col-md-6">
+                        <label for="nome" class="form-label">Nome Completo<span style="color:red">&nbsp;*</span></label>
+                        <input type="text" class="form-control" id="nome" name="nome" placeholder="Nome Completo" required>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6">
+                        <label for="email" class="form-label">E-mail<span
+                                class="text-muted">&nbsp;(Opcional)</span></label>
+                        <input type="email" class="form-control" id="email" name="email"
+                            placeholder="email@exemplo.com">
+                    </div>
+
+                    <div class="col-sm-12 col-md-6">
+                        <label for="telefone" class="form-label">Telefone<span
+                                class="text-muted">&nbsp;(Opcional)</span></label>
+                        <input type="number" class="form-control" id="telefone" name="telefone"
+                            placeholder="Somente números">
+                    </div>
+
+                    <div class="col-sm-12 col-md-6">
+                        <label for="celular" class="form-label">Celular<span style="color:red">&nbsp;*</span></label>
+                        <input type="number" class="form-control" id="celular" name="celular"
+                            placeholder="Somente números" required>
+                    </div>
+                </div>
+
+                <hr class="my-4"> <!-- Linha de separação -->
+
+                <!-- Preenchimento de dados do veículo -->
+                <h4 class="mb-3">Informações do Veículo</h4>
+                <div class="row g-3">
+                    <div class="col-sm-12 col-md-6">
+                        <label for="marca" class="form-label">Marca<span style="color:red">&nbsp;*</span></label>
+                        <input type="text" class="form-control" id="marca" name="marca" placeholder="Marca" required>
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <label for="modelo" class="form-label">Modelo<span style="color:red">&nbsp;*</span></label>
+                        <input type="text" class="form-control" id="modelo" name="modelo" placeholder="Modelo" required>
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <label for="cor" class="form-label">Cor Predominante<span
+                                style="color:red">&nbsp;*</span></label>
+                        <input type="text" class="form-control" id="cor" name="cor" placeholder="Cor Predominante" required>
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <label for="placa" class="form-label">Placa<span style="color:red">&nbsp;*</span></label>
+                        <input type="text" class="form-control" id="placa" name="placa" placeholder="Placa" required>
+                    </div>
+                </div>
+
+                <div class="mb-5"> </div> <!-- Espaçamento -->
+                <hr class="my-4"> <!-- Linha de separação -->
+
+                <!-- Mensagens de validação -->
+                <div class="col-12 text-center">
+                    {% if mensagem_ok %}
+                    <div class="alert alert-success" role="alert">
+                        {{ mensagem_ok }}
+                    </div>
+                    {% elif mensagem_erro %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ mensagem_erro }}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-md-12 col-lg-6 p-2">
+                        <a class="w-100 btn btn-outline-secondary btn-lg" href="javascript:history.back()">Voltar para anterior</a>
+                    </div>
+                    <div class="col-md-12 col-lg-6 p-2">
+                        <button class="w-100 btn btn-success btn-lg" type="submit">Cadastrar Cliente</button>
+                    </div>
+                </div> 
+            </form>
+        </div>
+    </div>
+</main>
+
+{% endblock %}

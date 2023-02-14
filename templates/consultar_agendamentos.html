@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% block conteudo %}
+
+<main class="container">
+    <div class="py-5 text-center">
+        <h2>Consulta de Agendamentos</h2>
+        <p class="lead">Verifique abaixo os registros de agendamento.</p>
+    </div>
+
+    <div class="container d-flex">
+        <form class="col-4 pe-5" action="/consultar_agendamentos" method="POST">
+            <div >
+                <label for="data_agendamento" class="form-label h5">Selecione a data para consulta.<span style="color:red">&nbsp;*</span></label></br>
+                <p class="small">Ou deixe em branco para retornar os agendamentos de hoje.</p>
+                <input type="date" class="form-control" id="data_agendamento" name="data_agendamento">
+                <button type="submit" class="btn btn-success col-12 mt-3" >Pesquisar</button>
+            </div>
+        </form>
+
+        <div class="col-8">
+            <table class="table ms-3">
+                <thead>
+                    <th>Número</th>
+                    <th>Data</th>
+                    <th>Hora</th>
+                    <th>Nome Cliente</th>
+                    <th>Placa Veículo</th>
+                    <th>Ações</th>
+                </thead>
+    
+                <!-- Preenchimento da tabela caso a pesquisa seja vazia (retorna todos os resultados do BD) -->
+                <tbody>
+                    {% for ag in agendamento %}
+                        {% if recebe_data_tratada.date() == ag.data_agendamento.date() %}
+                        <tr>
+                            {% for carro in veiculo %}
+                                {% if carro.id == ag.veiculo_id %}
+                                
+                                    <td>{{ ag.id }}</td>
+
+                                    <td>{{ ag.data_agendamento.date().day }}/{{ ag.data_agendamento.date().month }}/{{ ag.data_agendamento.date().year }}</td>
+
+                                    {% if ag.data_agendamento.time().minute == 0 %}
+                                    <td>{{ ag.data_agendamento.time().hour }}h00</td>
+                                    {% else %}
+                                    <td>{{ ag.data_agendamento.time().hour }}h{{ ag.data_agendamento.time().minute }}</td>
+                                    {% endif %}
+                                                                   
+                                    {% for cli in cliente %} 
+                                        {% if cli.id == carro.cliente_id %}
+                                            <td>{{ cli.nome }}</td>
+                                        {% endif %}
+                                    {% endfor %}
+    
+                                    <td>{{ carro.placa }}</td>
+                                    <td>
+                                        <a href="/info_agendamento/{{ag.id}}"><button type="button" class="btn btn-outline-secondary" >Info</button></a>
+                                        <span class="p-2">|</span>
+                                        <a href="/editar_agendamento/{{ag.id}}"><button type="button" class="btn btn-outline-primary">Editar</button></a>
+                                        <span class="p-2">|</span>
+                                        
+                                        <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModal{{ag.id}}">
+                                            Excluir
+                                        </button>
+                                        
+                                        <div class="modal fade" id="exampleModal{{ag.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Deseja excluir?</h1>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        Tem certeza que deseja excluir o agendamento nº {{ ag.id }}?
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                    <a href="/deletar_agendamento/{{ag.id}}"><button type="button" class="btn btn-danger">Sim</button></a>
+                                                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">Não</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </td>  
+                                
+                                {% endif %}
+                            {% endfor %} 
+                        </tr>
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+    <!-- Validações --> 
+    <div class="col-12 text-center">
+        {% if mensagem_info %}
+        <div class="col-12 p-5 d-flex justify-content-center">
+            <h5><span>{{ mensagem_info }}</span></h5>     
+        </div>
+        {% elif mensagem_editar %}
+        <div class="alert alert-success mt-5" role="alert">
+            {{ mensagem_editar }}
+        </div>
+        {% elif mensagem_deletar %}
+        <div class="alert alert-danger mt-5" role="alert">
+            {{ mensagem_deletar }}
+        </div>
+        {% endif %}
+    </div>
+
+    </div>    
+
+</main>
+
+{% endblock %}

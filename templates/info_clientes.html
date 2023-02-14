@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+{% block conteudo %}
+
+<main class="container">
+
+    <div class="py-5 text-center">
+        <h2>Informações de Cliente</h2>
+        <p class="lead">Verfique abaixo as informações de {{ cliente.nome.upper() }}.</p>
+    </div>
+
+    <div class="row g-5">
+        <div class="col-12">
+            <table class="table" action="/info_clientes/{{ cliente.id }}" method="POST"> <!-- Caminho para procura (com ID) -->
+                <!-- Tabela com dados do cliente -->
+                <h4 class="mb-3">Dados Pessoais</h4>
+                <thead class="col-12">
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>E-mail</th>
+                    <th>Telefone</th>
+                    <th>Celular</th>
+                    <th>Ações</th>
+                </thead>
+
+                <tbody class="col-12">
+                    <tr>
+                        <td>{{ cliente.id }}</td>
+                        <td>{{ cliente.nome }}</td>
+                        <td>{{ cliente.email }}</td>
+                        <td>({{cliente.telefone[0:2]}}){{cliente.telefone[2:6]}}-{{cliente.telefone[6:11]}}</td>
+                        <td>({{cliente.celular[0:2]}}){{cliente.celular[2]}}.{{cliente.celular[3:7]}}-{{cliente.celular[7:12]}}</td>
+                        <td>
+                            <a href="/editar_clientes/{{cliente.id}}"><button type="button" class="btn btn-outline-primary">Editar</button></a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table> 
+
+            <div class="mb-5"> </div> <!-- Espaçamento -->
+
+            <table class="table">
+                <!-- Tabela com dados dos veículos do cliente -->
+                <h4 class="mb-3">Dados dos Veículos</h4>
+                <thead class="col-12">
+                    <th>ID</th>
+                    <th>Marca</th>
+                    <th>Modelo</th>
+                    <th>Cor</th>
+                    <th>Placa</th>
+                    <th>Ações</th>
+                </thead>
+
+                <tbody class="col-12">
+                    {% for veiculo in veiculos %}
+                        {% if cliente.id == veiculo.cliente_id %}
+                            <tr>
+                                <td>{{ veiculo.id }}</td>
+                                <td>{{ veiculo.marca }}</td>
+                                <td>{{ veiculo.modelo }}</td>
+                                <td>{{ veiculo.cor }}</td>
+                                <td>{{ veiculo.placa }}</td>
+                                <td>
+                                    <a href="/editar_veiculo/{{veiculo.id}}"><button type="button" class="btn btn-outline-primary">Editar</button></a>
+                                    <span class="p-2">|</span>
+
+                                    <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModal{{veiculo.id}}">
+                                        Excluir
+                                    </button>
+                                    
+                                    <div class="modal fade" id="exampleModal{{veiculo.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                <h1 class="modal-title fs-5" id="exampleModalLabel">Deseja excluir?</h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    Tem certeza que deseja excluir o veículo de placa {{ veiculo.placa }}?                                        </div>
+                                                <div class="modal-footer">
+                                                <a href="/deletar_veiculo/{{veiculo.id}}"><button type="button" class="btn btn-danger">Sim</button></a>
+                                                <button type="button" class="btn btn-success" data-bs-dismiss="modal">Não</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                    <tr>
+                        <td> </td>
+                        <td> </td>
+                        <td> </td>
+                        <td> </td>
+                        <td> </td>
+                        <td>
+                            <a href="/veiculos/{{ cliente.id }}"><button type="button" class="btn btn-outline-primary">+ Adicionar Veículo</button></a>
+                        </td>
+                    </tr>
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+
+    <!-- Botões da parte de baixo -->
+    <div class="row g-3">
+        <div class="col-md-12 col-lg-6 p-2">
+            <button class="w-100 btn btn-outline-secondary btn-lg" type="submit" name="return" onclick="history.back()">
+                Voltar para anterior
+            </button>
+        </div>
+        <div class="col-md-12 col-lg-6 p-2">
+            <a href="/cadastrar_clientes">
+                <button class="w-100 btn btn-outline-success btn-lg" type="submit">
+                    Cadastrar novo cliente
+                </button>
+            </a>
+        </div>
+    </div>
+
+</main>
+
+{% endblock %}

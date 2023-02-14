@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block conteudo %}
+
+<!-- Informações de clientes -->
+
+<main class="container">
+
+    <div class="py-5 text-center">
+        <h2>Informações de Funcionário</h2>
+        <p class="lead">Verfique abaixo as informações de {{ funcionario.nome.upper() }}.</p>
+    </div>
+
+    <div class="row g-5">
+        <div class="col-12">
+            <table class="table" action="/info_funcionarios/{{ funcionario.id }}" method="POST"> <!-- Caminho para procura (com ID) -->
+                <!-- Tabela com dados do cliente -->
+                <h4 class="mb-3">Dados Pessoais</h4>
+                <thead class="col-12">
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>E-mail</th>
+                    <th>Telefone</th>
+                    <th>Celular</th>
+                    <th>Data Aniversário</th>
+                    <th>Data Contratação</th>
+                    <th>Função</th>
+                    <th>Ações</th>
+                </thead>
+
+                <tbody class="col-12">
+                    <tr>
+                        <td>{{ funcionario.id }}</td>
+                        <td>{{ funcionario.nome }}</td>
+                        <td>{{ funcionario.email }}</td>
+                        <td>({{funcionario.telefone[0:2]}}){{funcionario.telefone[2:6]}}-{{funcionario.telefone[6:11]}}</td>
+                        <td>({{funcionario.celular[0:2]}}){{funcionario.celular[2]}}.{{funcionario.celular[3:7]}}-{{funcionario.celular[7:12]}}</td>
+                        <td>{{ dataAniversario_formatada.day }}/{{ dataAniversario_formatada.month }}/{{ dataAniversario_formatada.year }}</td>
+                        <td>{{ dataContrato_formatada.day }}/{{ dataContrato_formatada.month }}/{{ dataContrato_formatada.year }}</td>
+                        <td>{{ funcionario.funcao }}</td>
+                        <td>
+                            <a href="/editar_funcionarios/{{funcionario.id}}"><button type="button" class="btn btn-outline-primary">Editar</button></a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table> 
+        </div>
+    </div>
+
+    <div class="mb-4"> </div> <!-- Espaçamento -->
+
+    <!-- Botões da parte de baixo -->
+    <div class="row g-3">
+        <div class="col-md-12 col-lg-6 p-2">
+            <button class="w-100 btn btn-outline-secondary btn-lg" type="submit" name="return" onclick="history.back()">
+                Voltar para anterior
+            </button>
+        </div>
+        <div class="col-md-12 col-lg-6 p-2">
+            <a href="/cadastrar_funcionario">
+                <button class="w-100 btn btn-outline-success btn-lg" type="submit">
+                    Cadastrar novo funcionário
+                </button>
+            </a>
+        </div>
+    </div>
+
+</main>
+
+{% endblock %}

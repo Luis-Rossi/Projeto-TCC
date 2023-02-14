@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block conteudo %}
+
+<main class="container">
+
+    <div class="py-5 text-center">
+        <h2>Informações do Agendamento nº {{ agendamento.id }}</h2>
+        <p class="lead">Verfique abaixo as informações do agendamento.</p>
+    </div>
+
+    <div class="row g-5">
+        <div class="col-12 d-flex">
+            <div class="col-4">
+                <h4 class="mb-3">Dados do Cliente</h4>
+                <p><strong>Nome: </strong>{{ cliente.nome }}</p>
+                <p><strong>E-mail: </strong>{{ cliente.email }}</p>
+                <p><strong>Telefone: </strong>({{cliente.telefone[0:2]}}){{cliente.telefone[2:6]}}-{{cliente.telefone[6:11]}}</p>
+                <p><strong>Celular: </strong>({{cliente.celular[0:2]}}){{cliente.celular[2]}}.{{cliente.celular[3:7]}}-{{cliente.celular[7:12]}}</p>
+            </div>
+
+            <div class="col-4">
+                <h4 class="mb-3">Dados do Veículo</h4>
+                <p><strong>Marca: </strong>{{ veiculo.marca }}</p>
+                <p><strong>Modelo: </strong>{{ veiculo.modelo }}</p>
+                <p><strong>Cor: </strong>{{ veiculo.cor }}</p>
+                <p><strong>Placa: </strong>{{ veiculo.placa }}</p>
+            </div>
+
+            <div class="col-4">
+                <h4 class="mb-3">Dados do Agendamento</h4>
+                <p><strong>Nº: </strong>{{ agendamento.id }}</p>
+                <p><strong>Data: </strong>{{ data_agendada }}</p>
+                <p><strong>Hora: </strong>{{ hora_agendada }}</p>
+                <p><a href="/info_orcamentos/{{agendamento.orcamento_id}}"><strong>Orçamento nº: </strong>{{ agendamento.orcamento_id }}</a></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="mb-4"> </div> <!-- Espaçamento -->
+
+    <!-- Botões da parte de baixo -->
+    <div class="row g-3">
+        <div class="col-md-12 col-lg-6 p-2">
+            <button class="w-100 btn btn-outline-secondary btn-lg" type="submit" name="return" onclick="history.back()">
+                Voltar para anterior
+            </button>
+        </div>
+        <div class="col-md-12 col-lg-6 p-2">
+            <a href="/cadastrar_agendamento">
+                <button class="w-100 btn btn-outline-success btn-lg" type="submit">
+                    Cadastrar novo agendamento
+                </button>
+            </a>
+        </div>
+    </div>
+
+</main>
+
+{% endblock %}

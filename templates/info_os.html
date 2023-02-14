@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% block conteudo %}
+
+<main class="container">
+
+    <div class="py-5 text-center">
+        <h2>Ordem de Serviço nº {{ ordemServico.id }}</h2>
+        <p class="lead">Confira abaixo as informações da ordem de serviço.</p>
+    </div>
+
+    <div class="row g-5">
+       
+        <div class="col-12">
+
+            <div class="col-12 d-flex">
+
+                <div class="col-4 mt-3">
+                    <h4 class="mb-3">Dados da Ordem de Serviço</h4>
+                    <p><strong>Sofisticar Estética Automotiva</strong></p>
+                    <p><strong>Refente ao Orçamento nº: </strong>{{orcamento.id}}</p>
+                    <p><strong>Funcionário Responsável: </strong>{{funcionario.nome}} ({{funcionario.funcao}})</p>
+                    <p>
+                        <strong>Status: </strong>
+                        {% set ultimo_status = [] %}
+                        {% set ultimo_status = ordemServico.status.keys() | list %}
+
+                        {% if ultimo_status[-1] == '1' or ultimo_status[-1] == '4'%}
+                        <td><button type="button" class="btn btn-secondary btn-sm" disabled>{{ ordemServico.retorna_status_os(ultimo_status[-1]) }}</button></td>
+                        {% elif ultimo_status[-1] == '3'%}
+                        <td><button type="button" class="btn btn-danger btn-sm" disabled>{{ ordemServico.retorna_status_os(ultimo_status[-1]) }}</td>
+                        {% elif ultimo_status[-1] == '2' or ultimo_status[-1] == '5'%}
+                        <td><button type="button" class="btn btn-success btn-sm" disabled>{{ ordemServico.retorna_status_os(ultimo_status[-1]) }}</td>
+                        {% endif %}
+                    </p>
+
+                </div>
+
+                <div class="col-4 mt-3">
+                    <h4 class="mb-3">Dados do Cliente</h4>
+                    <p><strong>Nome: </strong>{{cliente.nome}}</p>
+                    <p><strong>E-mail: </strong>{{cliente.email}}</p>
+                    <p><strong>Telefone: </strong>{{cliente.telefone}}</p>
+                    <p><strong>Celular: </strong>{{cliente.celular}}</p>
+                </div>
+
+                <div class="col-4 mt-3">
+                    <h4 class="mb-3">Dados do Veículo</h4>
+                    <p><strong>Marca: </strong>{{veiculo.marca}}</p>
+                    <p><strong>Modelo: </strong>{{veiculo.modelo}}</p>
+                    <p><strong>Cor: </strong>{{veiculo.cor}}</p>
+                    <p><strong>Placa: </strong>{{veiculo.placa}}</p>
+                </div>
+
+            </div>
+
+            {% if orcamento.servico_id != {} %}
+                <table class="table">
+                    <h4 class="mb-3">Serviços</h4>
+
+                    <thead class="col-12">
+                        <th>Serviço</th>
+                        <th>Descrição</th>
+                        <th>Valor</th>
+                    </thead>
+                
+                    <tbody class="col-12">
+                        {% for serv in servico %}
+                        <tr>
+                            {% for item in orcamento.servico_id %}
+                                {% for elemento in orcamento.servico_id[item] %}
+                                        {% if elemento | float == serv.id | float %}
+                                            <td>{{ serv.nome }}</td>
+                                            <td>{{ serv.descricao }}</td>
+                                            <td>R$ {{ '%0.2f'|format(serv.valor|float) }}</td>
+                                            
+                                        {% endif %}
+                                {% endfor %}
+                            {% endfor %}
+                        </tr> 
+                        {% endfor %}   
+                    </tbody>
+                </table>
+                <div class="col-4 mt-3">
+                    <h4 class="mb-3">Observações</h4>
+                    <p>{{ordemServico.descricao}}</p>
+                </div>
+            {% else %}
+            {% endif %}
+
+            <div class="mb-5"> </div> <!-- Espaçamento -->
+
+            <!-- Botões da parte de baixo -->
+            <div class="row g-3">
+                <div class="col-md-12 col-lg-6 p-2">
+                    <button class="w-100 btn btn-outline-secondary btn-lg" type="submit" name="return" onclick="history.back()">
+                        Voltar para anterior
+                    </button>
+                </div>
+                <div class="col-md-12 col-lg-6 p-2">
+                    <a href="/cadastrar_os">
+                        <button class="w-100 btn btn-outline-success btn-lg" type="submit">
+                            Cadastrar nova Ordem de Serviço
+                        </button>
+                    </a>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+</main>
+
+{% endblock %}

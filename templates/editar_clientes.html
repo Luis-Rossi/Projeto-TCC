@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% block conteudo %}
+
+<main class="container">
+    <div class="py-5 text-center">
+        <h2>Editar Informação de Clientes</h2>
+        <p class="lead">Insira abaixo as novas informações de {{ cliente.nome.upper() }} para atualização.</p>
+    </div>
+
+    <div class="row g-5">
+        <div class="col-12">
+            <form action="/editar_clientes/{{ cliente.id }}" method="POST">
+                <h4 class="mb-3">Informações do Cliente</h4>
+                <div class="row g-3">
+                    <!-- Campos para preenchimento com as novas informações do cliente (já vem marcado com o texto atual - value) -->
+                    <div class="col-sm-12 col-md-6">
+                        <label for="nome" class="form-label">Nome Completo</label>
+                        <input type="text" class="form-control" id="nome" name="nome" placeholder="Nome Completo" value="{{ cliente.nome }}">
+                    </div>
+
+                    <div class="col-sm-12 col-md-6">
+                        <label for="email" class="form-label">E-mail<span class="text-muted">&nbsp;(Opcional)</span></label>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="E-mail" value="{{ cliente.email }}">
+                    </div>
+
+                    <div class="col-sm-12 col-md-6">
+                        <label for="telefone" class="form-label">Telefone<span class="text-muted">&nbsp;(Opcional)</span></label>
+                        <input type="tel" class="form-control" id="telefone" name="telefone" placeholder="Telefone" value="{{ cliente.telefone }}">
+                    </div>
+
+                    <div class="col-sm-12 col-md-6">
+                        <label for="celular" class="form-label">Celular</label>
+                        <input type="tel" class="form-control" id="celular" name="celular" placeholder="Celular" value="{{ cliente.celular }}">
+                    </div>
+                
+                <div class="mb-3"> </div> <!-- Espaçamento -->
+                
+                <h4 class="mb-3">Informações dos Veículos</h4>
+                <table class="table col-12">
+                    <thead class="col-12">
+                        <th>ID</th>
+                        <th>Marca</th>
+                        <th>Modelo</th>
+                        <th>Cor Predominante</th>
+                        <th>Placa</th>
+                        <th>Ações</th>
+                    </thead>
+                    
+                    <tbody class="col-12">
+                        {% for veiculo in veiculos %}
+                            {% if cliente.id == veiculo.cliente_id %}
+                            <tr>
+                                <td>{{ veiculo.id }}</td>
+                                <td>{{ veiculo.marca }}</td>
+                                <td>{{ veiculo.modelo }}</td>
+                                <td>{{ veiculo.cor }}</td>
+                                <td>{{ veiculo.placa }}</td>
+                                <td>
+                                    <a href="/editar_veiculo/{{veiculo.id}}"><button type="button" class="btn btn-outline-primary">Editar</button></a>
+                                </td>
+                            </tr>
+                            {% endif %}
+                        {% endfor %}
+                        <tr>
+                            <td> </td>
+                            <td> </td>
+                            <td> </td>
+                            <td> </td>
+                            <td> </td>
+                            <td>
+                                <a href="/veiculos/{{ cliente.id }}"><button type="button" class="btn btn-outline-primary">+ Adicionar Veículo</button></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="row g-3">
+                    <div class="col-md-12 col-lg-6 p-2">
+                        <a class="w-100 btn btn-outline-secondary btn-lg" href="javascript:history.back()">Voltar para anterior</a>
+                    </div>
+                    <div class="col-md-12 col-lg-6 p-2">
+                        <button type="button" class="w-100 btn btn-success btn-lg" data-bs-toggle="modal" data-bs-target="#exampleModal{{cliente.id}}">
+                            Alterar informações
+                        </button>
+                        
+                        <div class="modal fade" id="exampleModal{{cliente.id}}" tabindex="-1" aria-labelledby="exampleModalLabel{{cliente.id}}" aria-hidden="true">
+                            <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel{{cliente.id}}">Alterar dados?</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    Tem certeza que deseja alterar os dados do cliente {{ cliente.nome }}?
+                                </div>
+                                <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Não</button>
+                                <button type="submit" class="btn btn-success">Sim</button></a>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> 
+
+            </form>
+        </div>
+    </div>   
+</main>
+
+{% endblock %}

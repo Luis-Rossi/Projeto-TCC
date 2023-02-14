@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% block conteudo %}
+
+<!-- Informações de clientes -->
+
+<main class="container">
+
+    <div class="py-5 text-center">
+        <h2>Itens do Orçamento</h2>
+        <p class="lead">Selecione abaixo os itens do orçamento.</p>
+
+        <div class="progress mt-4" style="height: 20px">
+            <div class="progress-bar" role="progressbar" style="width: 25%; background-color: #aaa" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">Cliente</div>
+            <div class="progress-bar" role="progressbar" style="width: 25%; background-color: #aaa" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">Veículo</div>
+            <div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">Itens</div>
+            <div class="progress-bar" role="progressbar" style="width: 25%; background-color: #aaa" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">Final</div>
+        </div>
+    </div>
+
+    <div class="row g-5">
+        <div class="col-12">
+            <form action="/cadastrar_orcamento/{{cliente.id}}/{{veiculo.id}}" method="POST">
+                <table class="table">
+                    <h4 class="mb-3">Serviços</h4>
+                    <thead class="col-12">
+                        <th>ID</th>
+                        <th>Nome</th>
+                        <th>Descrição</th>
+                        <th>Valor</th>
+                        <th>Incluir?</th>
+                    </thead>              
+                    <tbody class="col-12">
+                        {% for item in servico %}
+                            <tr>
+                                <td>{{ item.id }}</td>
+                                <td>{{ item.nome }}</td>
+                                <td>{{ item.descricao }}</td>
+                                <td>{{ item.valor }}</td>
+                                <td>
+                                    <input type="checkbox" name="incluir_servico" value="{{item.id}}"/>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <table class="table">
+                    <h4 class="mb-3">Produtos</h4>
+                    <thead class="col-12">
+                        <th>ID</th>
+                        <th>Nome</th>
+                        <th>Descrição</th>
+                        <th>Valor</th>
+                        <th>Incluir?</th>
+                    </thead>              
+                    <tbody class="col-12">
+                        {% for item in produto %}
+                            <tr>
+                                <td>{{ item.id }}</td>
+                                <td>{{ item.nome }}</td>
+                                <td>{{ item.descricao }}</td>
+                                <td>{{ item.valor }}</td>
+                                <td>
+                                    <input type="checkbox" name="incluir_produto" value="{{item.id}}"/>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                <div class="mb-5"> </div> <!-- Espaçamento -->
+
+                <!-- Validações --> 
+                <div class="col-12 text-center">
+                    {% if mensagem_erro %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ mensagem_erro }}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-md-12 col-lg-6 p-2">
+                        <a class="w-100 btn btn-outline-secondary btn-lg" href="javascript:history.back()">Voltar para anterior</a>
+                    </div>
+                    <div class="col-md-12 col-lg-6 p-2">
+                        <button class="w-100 btn btn-success btn-lg" type="submit">Avançar</button>
+                    </div>
+                </div> 
+
+                
+
+            </form>
+
+        </div>
+    </div>
+
+</main>
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

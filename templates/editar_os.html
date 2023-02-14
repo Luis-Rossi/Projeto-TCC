@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% block conteudo %}
+
+<!-- Cadastro de serviços -->
+
+<main class="container">
+    <div class="py-5 text-center">
+        <h2>Editar Ordem de Serviço</h2>
+        <p class="lead">Edite abaixo as informações da Ordem de Serviço.</p>
+    </div>
+
+    <div class="col-12 d-flex">
+        <div class="col-4">
+            <h4>Dados do cliente</h4>
+            <p><strong>Nome: </strong>{{ cliente.nome }}</p>
+            <p><strong>Telefone: </strong>{{ cliente.telefone }}</p>
+            <p><strong>E-mail: </strong>{{ cliente.email }}</p>
+        </div>
+
+        <div class="col-4">
+            <h4>Dados do veículo</h4>
+            <p><strong>Marca/Modelo: </strong>{{ veiculo.marca }} {{ veiculo.modelo }}</p>
+            <p><strong>Cor: </strong>{{ veiculo.cor }}</p>
+            <p><strong>Placa: </strong>{{ veiculo.placa }}</p>
+        </div>
+
+        <div class="col-4">
+            <h4>Serviços</h4>
+            
+            {% for item in orcamento.servico_id.values() | list %}
+                {% for serv in servico %}
+                    {% if item | int == serv.id | int %}
+                        <p>{{serv.descricao}}</p>
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="mb-4"> </div> <!-- Espaçamento -->
+
+    <div class="row g-5">
+        <div class="col-md-12 col-lg-12">
+            <form action="/editar_os/{{ ordemServico.id }}" method="POST">
+                <h4 class="mb-3">Informações da O.S.</h4>
+                <div class="row g-3">
+                    <!-- Preenchimento dos campos para serviço -->
+                    <div class="col-sm-12 col-md-4">
+                        <label for="orcamento" class="form-label" >Referente ao Orçamento nº:</label>
+                        <input type="number" class="form-control" id="orcamento" name="orcamento" placeholder={{ ordemServico.id }} disabled>
+                    </div>
+
+                    <div class="col-sm-12 col-md-4">
+                        <label for="status" class="form-label">Status:</label>
+                        <select class="form-select" id="status" name="status">
+                            <option selected>Selecione o status...</option>
+                            {% for item in ordemServico.status_os() %}
+                                <option value="{{item}}"> {{ item }} - {{ ordemServico.retorna_status_os(item) }} </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    {{ recebe_novo_status }}
+
+                    <div class="col-sm-12 col-md-4">
+                        <label for="funcionario" class="form-label">Funcionario: <span style="color:red">&nbsp;*</span></label>
+                        <select class="form-select" id="funcionario" name="funcionario">
+                            <option selected>Escolha o funcionário...</option>
+                            {% for func in funcionario %}
+                                <option value="{{func.id}}">{{ func.nome }} ({{ func.funcao }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="col-sm-12 col-md-12">
+                        <label for="descricao" class="form-label">Observação: <span style="color:red">&nbsp;*</span></label>
+                        <input type="text" class="form-control" id="descricao" name="descricao" placeholder={{ ordemServico.descricao }}>
+                    </div>
+
+                </div>
+
+                <div class="mb-5"> </div> <!-- Espaçamento -->
+
+                <div class="row g-3">
+                    <div class="col-md-12 col-lg-6 p-2">
+                        <a class="w-100 btn btn-outline-secondary btn-lg" href="javascript:history.back()">Voltar para anterior</a>
+                    </div>
+                    <div class="col-md-12 col-lg-6 p-2">
+                        <button type="button" class="w-100 btn btn-success btn-lg" data-bs-toggle="modal" data-bs-target="#exampleModal{{ordemServico.id}}">
+                            Alterar informações
+                        </button>
+                        
+                        <div class="modal fade" id="exampleModal{{ordemServico.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">Alterar dados?</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    Tem certeza que deseja alterar os dados da O.S nº {{ ordemServico.id }}?
+                                </div>
+                                <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Não</button>
+                                <button type="submit" class="btn btn-success">Sim</button></a>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> 
+
+            </form>
+        </div>
+    </div>
+</main>
+
+{% endblock %}

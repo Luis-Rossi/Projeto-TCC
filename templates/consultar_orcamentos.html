@@ -1,0 +1,261 @@
+{% extends "base.html" %}
+{% block conteudo %}
+
+<main class="container">
+    <div class="py-5 text-center">
+        <h2>Consulta de Orçamentos</h2>
+        <p class="lead">Insira abaixo uma das informações para pesquisar o cadastro de orçamentos, ou deixe em branco para retornar todos os registros.</p>
+    </div>
+
+    <div class="container">
+        <!-- Campos de pesquisa para novas consultas -->
+        <form action="/consultar_orcamentos" class="col-12 d-flex" method="POST">
+            <div class="col-3 p-1">
+                <select class="form-select" name="opcao_cliente">
+                    <option>-- Selecione --</option>
+                    <!--<option>Nome do Cliente</option>-->
+                    <option>Número do Orçamento</option>
+                    <option>Placa do Veículo</option>
+                </select>
+            </div>
+            <div class="col-9 p-1">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Insira uma informação ou deixe em branco para todos os registros" name="campo_cliente">
+                    <button type="submit" class="btn btn-secondary">Pesquisar!</button>
+                </div>
+            </div>
+        </form>
+        
+        <div class="mb-4"> </div> <!-- Espaçamento -->
+        <!-- Títulos da tabela -->
+        <table class="table col-12">
+            <thead class="col-12">
+                <th>Número</th>
+                <th>Data Criação</th>
+                <th>Nome Cliente</th>
+                <th>Placa Veículo</th>
+                <th>Valor Total</th>
+                <th>Status</th>
+                <th>Ações</th>
+            </thead>
+
+            <!-- Preenchimento da tabela caso a pesquisa seja vazia (retorna todos os resultados do BD) -->
+            <tbody class="col-12">
+                {% if campo_cliente == '' %}
+                    {% for orc in orcamento %}
+                        <tr>
+                            {% for carro in veiculo %}
+                                {% if carro.id == orc.veiculo_id %}
+                                
+                                    <td>{{ orc.id }}</td>
+                                    <td>{{ orc.data.day }}/{{ orc.data.month }}/{{ orc.data.year }}</td>
+                                    
+                                    {% for cli in cliente %} 
+                                        {% if cli.id == carro.cliente_id %}
+                                            <td>{{ cli.nome }}</td>
+                                        {% endif %}
+                                    {% endfor %}
+
+                                    <td>{{ carro.placa }}</td>
+                                    <td>R$ {{ '%0.2f'|format(orc.retorna_valor(orc.servico_id, orc.produto_id)|float) }}</td>
+
+                                    {% set ultimo_status = [] %}
+                                    {% set ultimo_status = orc.status.keys() | list %}
+
+                                    {% if ultimo_status[-1] == '1' or ultimo_status[-1] == '4'%}
+                                    <td><button type="button" class="btn btn-secondary btn-sm" disabled>{{ orc.retorna_status_orc(ultimo_status[-1]) }}</button></td>
+                                    {% elif ultimo_status[-1] == '3'%}
+                                    <td><button type="button" class="btn btn-danger btn-sm" disabled>{{ orc.retorna_status_orc(ultimo_status[-1]) }}</td>
+                                    {% elif ultimo_status[-1] == '2' or ultimo_status[-1] == '5'%}
+                                    <td><button type="button" class="btn btn-success btn-sm" disabled>{{ orc.retorna_status_orc(ultimo_status[-1]) }}</td>
+                                    {% endif %}
+
+                                    <td>
+                                        <a href="/info_orcamentos/{{orc.id}}"><button type="button" class="btn btn-outline-secondary" >Info</button></a>
+                                        <span class="p-2">|</span>
+                                        <a href="/editar_orcamento/{{orc.id}}"><button type="button" class="btn btn-outline-primary">Editar</button></a>
+                                        <span class="p-2">|</span>
+
+                                        <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModal{{orc.id}}">
+                                            Excluir
+                                        </button>
+                                        
+                                        <div class="modal fade" id="exampleModal{{orc.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Deseja excluir?</h1>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        Tem certeza que deseja excluir o orçamento nº{{ orc.id }}?
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                    <a href="/deletar_orcamento/{{orc.id}}"><button type="button" class="btn btn-danger">Sim</button></a>
+                                                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">Não</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>  
+                                {% endif %}
+                            {% endfor %} 
+                        </tr>
+                    {% endfor %}
+
+                {% elif opcao_cliente == 'Número do Orçamento' %}
+                    {% for orc in orcamento %}
+                        {% if campo_cliente | int == orc.id | int %}
+                            <tr>
+                                {% for carro in veiculo %}
+                                    {% if carro.id == orc.veiculo_id %}
+                                    
+                                        <td>{{ orc.id }}</td>
+                                        <td>{{ orc.data.day }}/{{ orc.data.month }}/{{ orc.data.year }}</td>
+                                        
+                                        {% for cli in cliente %} 
+                                            {% if cli.id == carro.cliente_id %}
+                                                <td>{{ cli.nome }}</td>
+                                            {% endif %}
+                                        {% endfor %}
+        
+                                        <td>{{ carro.placa }}</td>
+                                        <td>R$ {{ '%0.2f'|format(orc.retorna_valor(orc.servico_id, orc.produto_id)|float) }}</td>
+
+                                        {% set ultimo_status = [] %}
+                                        {% set ultimo_status = orc.status.keys() | list %}
+
+                                        {% if ultimo_status[-1] == '1' or ultimo_status[-1] == '4'%}
+                                        <td><button type="button" class="btn btn-secondary btn-sm" disabled>{{ orc.retorna_status_orc(ultimo_status[-1]) }}</button></td>
+                                        {% elif ultimo_status[-1] == '3'%}
+                                        <td><button type="button" class="btn btn-danger btn-sm" disabled>{{ orc.retorna_status_orc(ultimo_status[-1]) }}</td>
+                                        {% elif ultimo_status[-1] == '2' or ultimo_status[-1] == '5'%}
+                                        <td><button type="button" class="btn btn-success btn-sm" disabled>{{ orc.retorna_status_orc(ultimo_status[-1]) }}</td>
+                                        {% endif %}
+
+                                        <td>
+                                            <a href="/info_orcamentos/{{orc.id}}"><button type="button" class="btn btn-outline-secondary" >Info</button></a>
+                                            <span class="p-2">|</span>
+                                            <a href="/editar_orcamento/{{orc.id}}"><button type="button" class="btn btn-outline-primary">Editar</button></a>
+                                            <span class="p-2">|</span>
+                                            
+                                            <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModal{{orc.id}}">
+                                                Excluir
+                                            </button>
+                                            
+                                            <div class="modal fade" id="exampleModal{{orc.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Deseja excluir?</h1>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            Tem certeza que deseja excluir o orçamento nº{{ orc.id }}?
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                        <a href="/deletar_orcamento/{{orc.id}}"><button type="button" class="btn btn-danger">Sim</button></a>
+                                                        <button type="button" class="btn btn-success" data-bs-dismiss="modal">Não</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>  
+                                    {% endif %}
+                                {% endfor %} 
+                            </tr>
+                        
+                        {% endif %}
+                    {% endfor %}
+
+                {% elif opcao_cliente == 'Placa do Veículo' %}
+                    {% for orc in orcamento %}
+                        {% for carro in veiculo %}
+                            {% if campo_cliente.upper() in carro.placa.upper() %}
+                                <tr>
+                                    {% if carro.id == orc.veiculo_id %}
+                                    
+                                        <td>{{ orc.id }}</td>
+                                        <td>{{ orc.data.day }}/{{ orc.data.month }}/{{ orc.data.year }}</td>
+                                        
+                                        {% for cli in cliente %} 
+                                            {% if cli.id == carro.cliente_id %}
+                                                <td>{{ cli.nome }}</td>
+                                            {% endif %}
+                                        {% endfor %}
+        
+                                        <td>{{ carro.placa }}</td>
+                                        <td>R$ {{ '%0.2f'|format(orc.retorna_valor(orc.servico_id, orc.produto_id)|float) }}</td>
+                                        
+                                        {% set ultimo_status = [] %}
+                                        {% set ultimo_status = orc.status.keys() | list %}
+
+                                        {% if ultimo_status[-1] == '1' or ultimo_status[-1] == '4'%}
+                                        <td><button type="button" class="btn btn-secondary btn-sm" disabled>{{ orc.retorna_status_orc(ultimo_status[-1]) }}</button></td>
+                                        {% elif ultimo_status[-1] == '3'%}
+                                        <td><button type="button" class="btn btn-danger btn-sm" disabled>{{ orc.retorna_status_orc(ultimo_status[-1]) }}</td>
+                                        {% elif ultimo_status[-1] == '2' or ultimo_status[-1] == '5'%}
+                                        <td><button type="button" class="btn btn-success btn-sm" disabled>{{ orc.retorna_status_orc(ultimo_status[-1]) }}</td>
+                                        {% endif %}
+
+                                        <td>
+                                            <a href="/info_orcamentos/{{orc.id}}"><button type="button" class="btn btn-outline-secondary" >Info</button></a>
+                                            <span class="p-2">|</span>
+                                            <a href="/editar_orcamento/{{orc.id}}"><button type="button" class="btn btn-outline-primary">Editar</button></a>
+                                            <span class="p-2">|</span>
+                                            
+                                            <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModal{{orc.id}}">
+                                                Excluir
+                                            </button>
+                                            
+                                            <div class="modal fade" id="exampleModal{{orc.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Deseja excluir?</h1>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            Tem certeza que deseja excluir o orçamento nº{{ orc.id }}?
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                        <a href="/deletar_orcamento/{{orc.id}}"><button type="button" class="btn btn-danger">Sim</button></a>
+                                                        <button type="button" class="btn btn-success" data-bs-dismiss="modal">Não</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>  
+                                    
+                                    {% endif %}
+                                </tr>
+                            
+                            {% endif %}
+                        {% endfor %} 
+                    {% endfor %}   
+                {% endif %}
+            </tbody>
+        </table>
+
+        <!-- Validações --> 
+        <div class="col-12 text-center">
+            {% if mensagem_info %}
+            <div class="col-12 p-5 d-flex justify-content-center">
+                <h5><span>{{ mensagem_info }}</span></h5>     
+            </div>
+            {% elif mensagem_editar %}
+            <div class="alert alert-success" role="alert">
+                {{ mensagem_editar }}
+            </div>
+            {% elif mensagem_deletar %}
+            <div class="alert alert-danger" role="alert">
+                {{ mensagem_deletar }}
+            </div>
+            {% endif %}
+        </div>
+
+    </div>    
+
+</main>
+
+{% endblock %}                    

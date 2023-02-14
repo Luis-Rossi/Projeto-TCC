@@ -1,0 +1,312 @@
+{% extends "base.html" %}
+{% block conteudo %}
+
+<main class="container">
+    <div class="py-5 text-center">
+        <h2>Consulta de Ordem de Serviço</h2>
+        <p class="lead">Insira abaixo uma das informações para pesquisar sobre Ordem de Serviço, ou deixe em branco para retornar todos os registros.</p>
+    </div>
+
+    <div class="container">
+        <!-- Campos de pesquisa para novas consultas -->
+        <form action="/resultado_os" class="col-12 d-flex" method="POST">
+            <div class="col-3 p-1">
+                <select class="form-select" name="opcao">
+                    <option>-- Selecione --</option>
+                    <option>Número</option>
+                    <option>Status</option>
+                </select>
+            </div>
+            <div class="col-9 p-1">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Insira uma informação ou deixe em branco para todos os registros" name="campo">
+                    <button type="submit" class="btn btn-secondary">Pesquisar!</button>
+                </div>
+            </div>
+        </form>
+        
+        <div class="mb-4"> </div> <!-- Espaçamento -->
+        <!-- Títulos da tabela -->
+        <table class="table col-12">
+            <thead class="col-12">
+                <th>Nº</th>
+                <th>Nome Cliente</th>
+                <th>Placa Veículo</th>
+                <th>Func. Resp.</th>
+                <th>Status</th>
+                <th>Ações</th>
+            </thead>
+
+            <!-- Preenchimento da tabela caso a pesquisa seja vazia (retorna todos os resultados do BD) -->
+            <tbody class="col-12">
+                               
+                {% if campo == '' %}
+                
+                    {% for os in ordemServico %}
+                    <tr>
+                        <td>{{ os.id }}</td>
+                        
+                        {% for orc in orcamento %}
+                            {% if orc.id == os.orcamento_id %}
+                                {% for veic in veiculo %}
+                                    {% if veic.id == orc.veiculo_id %}
+                                        {% for cli in cliente %}
+                                            {% if veic.cliente_id == cli.id %}
+                                                <td>{{ cli.nome }}</td>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                        {% endfor %}
+
+                        {% for orc in orcamento %}
+                            {% if orc.id == os.orcamento_id %}
+                                {% for veic in veiculo %}
+                                    {% if veic.id == orc.veiculo_id %}
+                                        <td>{{ veic.placa }}</td>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                        {% endfor %}
+                        
+                        {% for func in funcionario %}
+                            {% if func.id == os.funcionario_id %}
+                                <td>{{ func.nome }} ({{ func.funcao }})</td>
+                            {% endif %}
+                        {% endfor %}
+                        
+                        {% set ultimo_status = [] %}
+                        {% set ultimo_status = os.status.keys() | list %}
+
+                        {% if ultimo_status[-1] == '1' or ultimo_status[-1] == '4'%}
+                        <td><button type="button" class="btn btn-secondary btn-sm" disabled>{{ os.retorna_status_os(ultimo_status[-1]) }}</button></td>
+                        {% elif ultimo_status[-1] == '3'%}
+                        <td><button type="button" class="btn btn-danger btn-sm" disabled>{{ os.retorna_status_os(ultimo_status[-1]) }}</td>
+                        {% elif ultimo_status[-1] == '2' or ultimo_status[-1] == '5'%}
+                        <td><button type="button" class="btn btn-success btn-sm" disabled>{{ os.retorna_status_os(ultimo_status[-1]) }}</td>
+                        {% endif %}
+
+
+                        
+                        <td>
+                            <a href="/info_os/{{os.id}}"><button type="button" class="btn btn-outline-secondary" >Info</button></a>
+                            <span class="p-2">|</span>
+                            <a href="/editar_os/{{os.id}}"><button type="button" class="btn btn-outline-primary">Editar</button></a>
+                            <span class="p-2">|</span>
+
+                            <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModal{{os.id}}">
+                                Excluir
+                            </button>
+                            
+                            <div class="modal fade" id="exampleModal{{os.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Deseja excluir?</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Tem certeza que deseja excluir a O.S. nº{{ os.id }}?
+                                    </div>
+                                    <div class="modal-footer">
+                                    <a href="/deletar_os/{{os.id}}"><button type="button" class="btn btn-danger">Sim</button></a>
+                                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">Não</button>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                        </td>                       
+                    </tr>
+                    {% endfor %}
+
+                {% elif opcao == 'Número' %}
+                    {% for os in ordemServico %}
+                        {% if campo | int == os.id | int %}
+                            <tr>
+                                <td>{{ os.id }}</td>
+                                
+                                {% for orc in orcamento %}
+                                    {% if orc.id == os.orcamento_id %}
+                                        {% for veic in veiculo %}
+                                            {% if veic.id == orc.veiculo_id %}
+                                                {% for cli in cliente %}
+                                                    {% if veic.cliente_id == cli.id %}
+                                                        <td>{{ cli.nome }}</td>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endfor %}
+        
+                                {% for orc in orcamento %}
+                                    {% if orc.id == os.orcamento_id %}
+                                        {% for veic in veiculo %}
+                                            {% if veic.id == orc.veiculo_id %}
+                                                <td>{{ veic.placa }}</td>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endfor %}
+                                
+                                {% for func in funcionario %}
+                                    {% if func.id == os.funcionario_id %}
+                                        <td>{{ func.nome }} ({{ func.funcao }})</td>
+                                    {% endif %}
+                                {% endfor %}
+                                
+                                {% set ultimo_status = [] %}
+                                {% set ultimo_status = os.status.keys() | list %}
+        
+                                {% if ultimo_status[-1] == '1' or ultimo_status[-1] == '4'%}
+                                <td><button type="button" class="btn btn-secondary btn-sm" disabled>{{ os.retorna_status_os(ultimo_status[-1]) }}</button></td>
+                                {% elif ultimo_status[-1] == '3'%}
+                                <td><button type="button" class="btn btn-danger btn-sm" disabled>{{ os.retorna_status_os(ultimo_status[-1]) }}</td>
+                                {% elif ultimo_status[-1] == '2' or ultimo_status[-1] == '5'%}
+                                <td><button type="button" class="btn btn-success btn-sm" disabled>{{ os.retorna_status_os(ultimo_status[-1]) }}</td>
+                                {% endif %}
+        
+        
+                                
+                                <td>
+                                    <a href="/info_os/{{os.id}}"><button type="button" class="btn btn-outline-secondary" >Info</button></a>
+                                    <span class="p-2">|</span>
+                                    <a href="/editar_os/{{os.id}}"><button type="button" class="btn btn-outline-primary">Editar</button></a>
+                                    <span class="p-2">|</span>
+                                    
+                                    <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModal{{os.id}}">
+                                        Excluir
+                                    </button>
+                                    
+                                    <div class="modal fade" id="exampleModal{{os.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                            <h1 class="modal-title fs-5" id="exampleModalLabel">Deseja excluir?</h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Tem certeza que deseja excluir a O.S. nº{{ os.id }}?
+                                            </div>
+                                            <div class="modal-footer">
+                                            <a href="/deletar_os/{{os.id}}"><button type="button" class="btn btn-danger">Sim</button></a>
+                                            <button type="button" class="btn btn-success" data-bs-dismiss="modal">Não</button>
+                                            </div>
+                                        </div>
+                                        </div>
+                                    </div>
+                                </td>                       
+                            </tr>
+                        {% endif %}                   
+                    {% endfor %}
+                
+                {% elif opcao == 'Status' %}
+                    {% for os in ordemServico %}
+                        {% set teste = os.status.keys() | list %}
+                        {% set teste2 = os.retorna_status_os(teste[0]) %}
+                        {% if campo.upper() in teste2.upper() %}
+                            <tr>
+                                <td>{{ os.id }}</td>
+                                
+                                {% for orc in orcamento %}
+                                    {% if orc.id == os.orcamento_id %}
+                                        {% for veic in veiculo %}
+                                            {% if veic.id == orc.veiculo_id %}
+                                                {% for cli in cliente %}
+                                                    {% if veic.cliente_id == cli.id %}
+                                                        <td>{{ cli.nome }}</td>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endfor %}
+        
+                                {% for orc in orcamento %}
+                                    {% if orc.id == os.orcamento_id %}
+                                        {% for veic in veiculo %}
+                                            {% if veic.id == orc.veiculo_id %}
+                                                <td>{{ veic.placa }}</td>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endfor %}
+                                
+                                {% for func in funcionario %}
+                                    {% if func.id == os.funcionario_id %}
+                                        <td>{{ func.nome }} ({{ func.funcao }})</td>
+                                    {% endif %}
+                                {% endfor %}
+                                
+                                {% set ultimo_status = [] %}
+                                {% set ultimo_status = os.status.keys() | list %}
+        
+                                {% if ultimo_status[-1] == '1' or ultimo_status[-1] == '4'%}
+                                <td><button type="button" class="btn btn-secondary btn-sm" disabled>{{ os.retorna_status_os(ultimo_status[-1]) }}</button></td>
+                                {% elif ultimo_status[-1] == '3'%}
+                                <td><button type="button" class="btn btn-danger btn-sm" disabled>{{ os.retorna_status_os(ultimo_status[-1]) }}</td>
+                                {% elif ultimo_status[-1] == '2' or ultimo_status[-1] == '5'%}
+                                <td><button type="button" class="btn btn-success btn-sm" disabled>{{ os.retorna_status_os(ultimo_status[-1]) }}</td>
+                                {% endif %}
+        
+        
+                                
+                                <td>
+                                    <a href="/info_os/{{os.id}}"><button type="button" class="btn btn-outline-secondary" >Info</button></a>
+                                    <span class="p-2">|</span>
+                                    <a href="/editar_os/{{os.id}}"><button type="button" class="btn btn-outline-primary">Editar</button></a>
+                                    <span class="p-2">|</span>
+                                    
+                                    <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModal{{os.id}}">
+                                        Excluir
+                                    </button>
+                                    
+                                    <div class="modal fade" id="exampleModal{{os.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                            <h1 class="modal-title fs-5" id="exampleModalLabel">Deseja excluir?</h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Tem certeza que deseja excluir a O.S. nº{{ os.id }}?
+                                            </div>
+                                            <div class="modal-footer">
+                                            <a href="/deletar_os/{{os.id}}"><button type="button" class="btn btn-danger">Sim</button></a>
+                                            <button type="button" class="btn btn-success" data-bs-dismiss="modal">Não</button>
+                                            </div>
+                                        </div>
+                                        </div>
+                                    </div>
+                                </td>                       
+                            </tr>
+                        {% endif %}                   
+                    {% endfor %}
+
+                {% endif %}
+            </tbody>
+        </table>
+        
+        <!-- Validações --> 
+        <div class="col-12 text-center">
+            {% if mensagem_info %}
+            <div class="col-12 p-5 d-flex justify-content-center">
+                <h5><span>{{ mensagem_info }}</span></h5>     
+            </div>
+            {% elif mensagem_editar %}
+            <div class="alert alert-success" role="alert">
+                {{ mensagem_editar }}
+            </div>
+            {% elif mensagem_deletar %}
+            <div class="alert alert-danger" role="alert">
+                {{ mensagem_deletar }}
+            </div>
+            {% endif %}
+        </div>
+
+    </div>    
+
+</main>
+
+{% endblock %}

@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+{% block conteudo %}
+
+<main class="container">
+
+    <div class="py-5 text-center">
+        <h2>Editar Orçamento nº {{ orcamento.id }}</h2>
+        <p class="lead">Selecione abaixo os itens do orçamento.</p>
+    </div>
+
+    <div class="row g-5">
+        <div class="col-12">
+            <form action="/editar_orcamento/{{ orcamento.id }}" method="POST">
+
+                <h4 class="mb-3">Informações</h4>
+                <div class="row g-3 d-flex">
+                    <div class="col-sm-12 col-md-2">
+                        <label for="id_orcamento" class="form-label">Nº Orçamento</label>
+                        <input type="text" class="form-control" id="id_orcamento" name="id_orcamento" placeholder="{{orcamento.id}}" disabled>
+                    </div>
+
+                    <div class="col-sm-12 col-md-3">
+                        <label for="placa_veiculo" class="form-label">Nome Cliente</label>
+                        <input type="text" class="form-control" id="nome_cliente" name="nome_cliente" placeholder="{{cliente.nome}}" disabled>
+                    </div>
+
+                    <div class="col-sm-12 col-md-3">
+                        <label for="placa_veiculo" class="form-label">Placa</label>
+                        <input type="text" class="form-control" id="placa_veiculo" name="placa_veiculo" placeholder="{{veiculo.placa}}" disabled>
+                    </div>
+
+                    <div class="col-sm-12 col-md-4">
+                        <label for="status" class="form-label">Status:</label>
+                        <select class="form-select" id="status" name="status">
+                            <option selected>Selecione o status...</option>
+                            {% for item in orcamento.status_orc() %}
+                                <option value="{{item}}"> {{ item }} - {{ orcamento.retorna_status_orc(item) }} </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mb-5"> </div> <!-- Espaçamento -->
+
+                <table class="table">
+                    <h4 class="mb-3">Serviços</h4>
+                    <thead class="col-12">
+                        <th>ID</th>
+                        <th>Nome</th>
+                        <th>Descrição</th>
+                        <th>Valor</th>
+                        <th>Incluir?</th>
+                    </thead>              
+                    <tbody class="col-12">
+                        {% for serv in servico %}
+                            <tr>
+                                <td>{{ serv.id }}</td>
+                                <td>{{ serv.nome }}</td>
+                                <td>{{ serv.descricao }}</td>
+                                <td>R$ {{ '%0.2f'|format(serv.valor|float) }}</td>
+                                <td>
+                                    <input type="checkbox" name="incluir_servico" value="{{serv.id}}"/>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <table class="table">
+                    <h4 class="mb-3">Produtos</h4>
+                    <thead class="col-12">
+                        <th>ID</th>
+                        <th>Nome</th>
+                        <th>Descrição</th>
+                        <th>Valor</th>
+                        <th>Incluir?</th>
+                    </thead>              
+                    <tbody class="col-12">
+                        {% for item in produto %}
+                            <tr>
+                                <td>{{ item.id }}</td>
+                                <td>{{ item.nome }}</td>
+                                <td>{{ item.descricao }}</td>
+                                <td>R$ {{ '%0.2f'|format(item.valor|float) }}</td>
+                                <td>
+                                    <input type="checkbox" name="incluir_produto" value="{{item.id}}"/>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                <div class="mb-5"> </div> <!-- Espaçamento -->
+
+                <div class="row g-3">
+                    <div class="col-md-12 col-lg-6 p-2">
+                        <a class="w-100 btn btn-outline-secondary btn-lg" href="javascript:history.back()">Voltar para anterior</a>
+                    </div>
+                    <div class="col-md-12 col-lg-6 p-2">
+                        <button type="button" class="w-100 btn btn-success btn-lg" data-bs-toggle="modal" data-bs-target="#exampleModal{{orcamento.id}}">
+                            Alterar informações
+                        </button>
+                        
+                        <div class="modal fade" id="exampleModal{{orcamento.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">Alterar dados?</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    Tem certeza que deseja alterar os dados do orcamento nº {{ orcamento.id }}?
+                                </div>
+                                <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Não</button>
+                                <button type="submit" class="btn btn-success">Sim</button></a>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> 
+
+            </form>
+        </div>
+    </div>
+
+</main>
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
